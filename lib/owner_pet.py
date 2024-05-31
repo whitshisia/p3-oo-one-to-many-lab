@@ -4,14 +4,19 @@ class Pet:
 
     def __init__(self, name, pet_type, owner=None):
         if pet_type not in Pet.PET_TYPES:
-            raise Exception(f"Invalid pet type: {pet_type}. Valid types are: {Pet.PET_TYPES}")
+            raise Exception(f"pet_type must be one of {Pet.PET_TYPES}")
         self.name = name
         self.pet_type = pet_type
-        self.owner = owner
+        self.owner = None
+        if owner:
+            if not isinstance(owner, Owner):
+                raise Exception("owner must be an instance of Owner")
+            self.owner = owner
+            owner.add_pet(self)
         Pet.all.append(self)
 
 class Owner:
-    def __init__(self, name,):
+    def __init__(self, name):
         self.name = name
         self._pets = []
 
@@ -20,7 +25,7 @@ class Owner:
 
     def add_pet(self, pet):
         if not isinstance(pet, Pet):
-            raise Exception("The pet must be an instance of the Pet class.")
+            raise Exception("pet must be an instance of Pet")
         pet.owner = self
         self._pets.append(pet)
 
